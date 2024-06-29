@@ -1,0 +1,27 @@
+.container {
+    width: 100px;
+    height: 100vh;
+    color: #857E81;
+    border-right: 1px solid #857E81;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+.icons {
+    font-size: 30px;
+    margin: 20px;
+    color: #857E81;
+    &:hover {
+        cursor: pointer;
+        color: #FEFEFE;
+    }
+}
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+}
+.active {
+    color: #FEFEFE;
+}
