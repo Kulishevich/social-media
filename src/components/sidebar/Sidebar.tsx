@@ -12,28 +12,29 @@ import { toggleTheme } from '@/redux/slices/themeSlice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const pathElems = [
+  {
+    path: '/friends',
+    content: <FaUserFriends/>
+  },
+  {
+    path: '/calls',
+    content: <FaPhoneAlt/>
+  },
+  {
+    path: '/messages',
+    content: <AiOutlineMessage/>
+  },
+  {
+    path: '/setting',
+    content: <IoSettingsOutline/>
+  }
+]
+
 const Sidebar = () => {
     const toggle = useSelector((state: RootState) => state.theme)
     const dispatch = useDispatch()
     const path = usePathname()
-    const pathElems = [
-      {
-        path: '/friends',
-        content: <FaUserFriends/>
-      },
-      {
-        path: '/calls',
-        content: <FaPhoneAlt/>
-      },
-      {
-        path: '/messages',
-        content: <AiOutlineMessage/>
-      },
-      {
-        path: '/setting',
-        content: <IoSettingsOutline/>
-      }
-    ]
 
 
   return (
@@ -41,7 +42,11 @@ const Sidebar = () => {
         <CgProfile className={styles.icons}/>
         <nav className={styles.nav}>
             {pathElems.map((elem, index) => (
-              <Link href={elem.path} className={`${styles.icons} ${pathElems[index].path == path && styles.active}`}>
+              <Link 
+                href={elem.path} 
+                className={`${styles.icons} ${pathElems[index].path == path && styles.active}`}
+                key={index}
+              >
                 {elem.content}
               </Link>
             ))}

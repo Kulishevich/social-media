@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
-import styles from './layout.module.scss'
-import RootLayoutClient from "@/Provider/RootLayoutClient";
+import RootLayoutClient from "@/components/Provider/RootLayoutClient";
+import Layout from "@/components/Layout/Layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,12 +15,12 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
   return (
       <html lang="en">
-        <body className={`${inter.className} ${styles.container}`}>
-          <RootLayoutClient>
-            <Sidebar/>
-            {children}
-          </RootLayoutClient>
-        </body>
+        <RootLayoutClient>
+          <Layout>
+              <Sidebar/>
+              {children}
+          </Layout>
+        </RootLayoutClient>
       </html>
   );
 }

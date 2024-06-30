@@ -1,10 +1,9 @@
-import Image from "next/image";
-import styles from "./page.module.scss";
+import Auth from "@/components/auth/Auth";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      
+    <main>
+      <Auth/>
     </main>
   );
 }

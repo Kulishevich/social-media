@@ -1,0 +1,11 @@
+.dark {
+    display: flex;
+    background-color: #0B121C;  
+    color: #857E81;
+}
+.light {
+    display: flex;
+    background-color: white;  
+    color: black;
+    transition: background-color 0.4 easy;
+}
