@@ -3,35 +3,45 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Auth.module.scss'
 import { setUser } from '@/redux/slices/userSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import '../../firebase'
+import { RootState } from '@/redux/store'
 
 const Auth = () => {
     const dispatch = useDispatch()
+    const userElem = useSelector((state: RootState) => state.user)
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     const signIn = (data: any) => {
         console.log('sighIn')
         const auth = getAuth()
-        console.log(auth)
         signInWithEmailAndPassword(auth, data.email, data.password)
         .then(console.log)
-        .catch(console.error)
+        .catch(() => alert('Неправильный логин или пароль!'))
+        console.log(userElem)
     }
-
+//суть в том, что нужно сделать так чтобы при регистрации мы ничего и никуда не добавляли, тк всё добавляется на firebase, но при 
+// при sing in должна происходить проверка, а если не ошибаюсь там просто должен вернуться user в случае успешной авторизации
+// и соотвтетсвенно мы user который возвращается записываем в redux! и входим в аккаунт! пока так
     const signUp = (data: any) => {
         console.log('sighUp')
         const auth = getAuth()
-        console.log(auth)
         createUserWithEmailAndPassword(auth, data.email, data.password)
-        .then(console.log)
+        .then(({user}) => {
+            dispatch(setUser({
+                id: user.uid,
+                token: user.accessToken,
+                email: user.email,
+            }))
+        })
         .catch(console.error)
     }
 
   return (
         <div className={styles.container}>
             <form className={styles.form}>
+            <small>{userElem.email}</small><br/>
                 <input placeholder='Email' type="email" {...register("email")}/>
                 <input placeholder='Password' type="password" {...register("password")}/>
                 <div>
