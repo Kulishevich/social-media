@@ -8,6 +8,10 @@
     align-items: center;
     flex-direction: column;
 }
+.iconContainer{
+    display: flex;
+    flex-direction: column;
+}
 .icons {
     font-size: 30px;
     margin: 20px;

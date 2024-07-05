@@ -35,11 +35,26 @@ const Sidebar = () => {
     const toggle = useSelector((state: RootState) => state.theme)
     const dispatch = useDispatch()
     const path = usePathname()
+    const login = useSelector((state: RootState) => state.user.email)
 
+    // const logName = () => {
+    //   const arr = login?.split('')
+    //   const res = arr.map(elem => {
+    //     if()
+    //     return elem
+    //   })
+    // }
+
+    if(!login){
+      return 
+    }
 
   return (
     <div className={styles.container}>
-        <CgProfile className={styles.icons}/>
+        <div className={styles.iconContainer}>
+          <CgProfile className={styles.icons}/>
+          {login && <small>{login}</small>}
+        </div>
         <nav className={styles.nav}>
             {pathElems.map((elem, index) => (
               <Link 
