@@ -1,0 +1,21 @@
+.main {
+    display: flex;
+    height: 100vh;
+}
+.chats {
+    border-right: 1px solid #857E81;
+    width: 350px;
+    height: 100%;
+    .profile {
+        border-bottom: 1px solid #857E81;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        color: white;
+    }
+}
+.tools {
+
+}

@@ -37,14 +37,6 @@ const Sidebar = () => {
     const path = usePathname()
     const login = useSelector((state: RootState) => state.user.email)
 
-    // const logName = () => {
-    //   const arr = login?.split('')
-    //   const res = arr.map(elem => {
-    //     if()
-    //     return elem
-    //   })
-    // }
-
     if(!login){
       return 
     }

@@ -2,10 +2,12 @@
     display: flex;
     background-color: #0B121C;  
     color: #857E81;
+    max-height: 100vh;
 }
 .light {
     display: flex;
     background-color: white;  
     color: black;
     transition: background-color 0.4 easy;
+    max-height: 100vh;
 }
