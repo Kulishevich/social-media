@@ -1,18 +1,35 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Messages.module.scss'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Chat from '../Chat/Chat'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '@/firebase'
+import { IChat } from '@/types/types'
 
 const Messages = () => {
     const userEmail = useSelector((state: RootState) => state.user.email)
-    const messages = [{
-        id: 1,
-        sender: 'maxim8992012@yandex.ru'
-    }]
+    const [chats, setChats] = useState<IChat[]>([])
 
+    useEffect(() => {//получение списка чатов
+        const chatsCollection = collection(db, "chats");
 
+        const unsubscribe = onSnapshot(chatsCollection, (snapshot) => {
+          const chatsData: IChat[] = [];
+          snapshot.forEach((doc) => {
+            chatsData.push({
+              id: doc.id,  // Используем id документа Firestore
+              messages: doc.data().messages,
+              users: doc.data().users
+            });
+          });
+          setChats(chatsData);
+        });
+    
+        // Отписка от слушателя при размонтировании компонента
+        return () => unsubscribe();
+      }, []);
 
 
   return (
@@ -22,15 +39,12 @@ const Messages = () => {
                 <small>{userEmail}</small>
             </div>
             <div className={styles.chatsElems}>
-                {messages ? 
-                    messages.map((elem, index) => <p key={index}>{elem.sender}</p>)
-                :
-                <p>Messages not found</p>
-                }
+                {/* чаты */}
+                {chats && chats.map((obj, index) => <p>{obj.id}</p>)}
             </div>
         </div>
         
-        <Chat/>
+        {/* <Chat/> */}
         
         <div className={styles.tools}>
 
