@@ -11,6 +11,7 @@ import { RootState } from '@/redux/store';
 import { toggleTheme } from '@/redux/slices/themeSlice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useIsAuth } from '@/services/useIsAuth';
 
 const pathElems = [
   {
@@ -35,17 +36,14 @@ const Sidebar = () => {
     const toggle = useSelector((state: RootState) => state.theme)
     const dispatch = useDispatch()
     const path = usePathname()
-    const login = useSelector((state: RootState) => state.user.email)
-
-    if(!login){
-      return 
-    }
+    const { user } = useIsAuth()
 
   return (
     <div className={styles.container}>
         <div className={styles.iconContainer}>
           <CgProfile className={styles.icons}/>
-          {login && <small>{login}</small>}
+          {user && <small>{user?.email}</small>}
+          <button>Log out</button>
         </div>
         <nav className={styles.nav}>
             {pathElems.map((elem, index) => (

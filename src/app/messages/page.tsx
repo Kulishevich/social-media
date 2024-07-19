@@ -1,11 +1,11 @@
 import React from 'react'
 import styles from './page.module.scss'
-import Messages from '@/components/Messages/Messages'
+import ChatBar from '@/components/ChatBar/ChatBar'
 
 
 const page = () => {
   return (
-    <Messages/>
+    <ChatBar/>
   )
 }
 

@@ -1,0 +1,19 @@
+.chat {
+    border-bottom: 1px solid #857E81;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // align-items: center;
+    &:hover {
+        cursor: pointer;
+        opacity: 0.5;
+    }
+}
+.chatTitle {
+    color: white;
+    margin-bottom: 5px;
+}
+.lastMessage{
+
+}

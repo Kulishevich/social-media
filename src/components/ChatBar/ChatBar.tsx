@@ -1,14 +1,15 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import styles from './Messages.module.scss'
+import styles from './ChatBar.module.scss'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Chat from '../Chat/Chat'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { IChat } from '@/types/types'
+import ChatBarElem from '../ChatBarElem/ChatBarElem'
 
-const Messages = () => {
+const ChatBar = () => {
     const userEmail = useSelector((state: RootState) => state.user.email)
     const [chats, setChats] = useState<IChat[]>([])
 
@@ -24,6 +25,7 @@ const Messages = () => {
               users: doc.data().users
             });
           });
+          console.log(chatsData)
           setChats(chatsData);
         });
     
@@ -40,11 +42,13 @@ const Messages = () => {
             </div>
             <div className={styles.chatsElems}>
                 {/* чаты */}
-                {chats && chats.map((obj, index) => <p>{obj.id}</p>)}
+                {chats && chats.map((obj, index) => (
+                  <ChatBarElem chat={obj} key={index}/>
+                ))}
             </div>
         </div>
         
-        {/* <Chat/> */}
+        <Chat/>
         
         <div className={styles.tools}>
 
@@ -53,4 +57,4 @@ const Messages = () => {
   )
 }
 
-export default Messages
+export default ChatBar

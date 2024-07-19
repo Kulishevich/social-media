@@ -7,8 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import '../../firebase'
 import { collection, addDoc, getDocs } from 'firebase/firestore'
 import { db } from '../../firebase';
-import { Message } from '@/types/types';
-// import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useIsAuth } from '@/services/useIsAuth';
 
 type Input = {
   text: string
@@ -16,28 +15,8 @@ type Input = {
 
 const Chat = () => {
   const { register, handleSubmit } = useForm<Input>()
+  const { user, loading } = useIsAuth()
 
-  useEffect(() => {
-    const fetchMessages = async() => {
-      const querySnapshot = await getDocs(collection(db, "chats"));
-      querySnapshot.forEach((doc) => {
-        console.log(doc.data().messages);
-      });
-    }
-
-    fetchMessages()
-  }, [])
-
-  // const auth = getAuth()
-
-  // ПРОВЕРКА НА АВТОРИЗАЦИЮ, можно сделать без redux
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (!user) {
-  //       console.log('User is not authenticated');
-  //     }
-  //   });
-  // }, []);
 
   const onSubmit: SubmitHandler<Input> = async(data) => { //ИНПУТ, отправка сообщений
     //добавление нового сообщения

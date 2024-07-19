@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Auth.module.scss'
 import { setUser } from '@/redux/slices/userSlice'
@@ -8,12 +8,19 @@ import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } f
 import '../../firebase'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/navigation'
+import { useIsAuth } from '@/services/useIsAuth'
 
 const Auth = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const userElem = useSelector((state: RootState) => state.user)
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const { user, loading } = useIsAuth()
+    
+    if(user){
+        router.push('/messages')
+        console.log(1)
+    }
 
     const signIn = (data: any) => { // вход
         console.log('sighIn')
