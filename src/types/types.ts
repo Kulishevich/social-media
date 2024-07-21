@@ -6,10 +6,7 @@ export type Message = {
 }
 
 export type User = {
-    id: string,
     email: string,
-    token: string,
-    chats: IChat[]
 }
 
 export interface IChat{

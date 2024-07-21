@@ -8,7 +8,7 @@ export const useIsAuth = () => {
     useEffect(() => {
         const auth = getAuth()
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            // console.log(user)
+            // console.log(user) 
             // console.log('User email:' + user?.email)
             // console.log('User id:' + user?.uid)
             setUser(user)
