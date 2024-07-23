@@ -46,3 +46,27 @@
 .icon {
     font-size: 25px;
 }
+.messages {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    justify-content: end;
+}
+.container {
+    width: 100%;
+    display: flex;
+}
+.message {
+    background-color: #1A2332;
+    width: fit-content;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    & > small {
+        color: white;
+        font-size: 15px;
+    }
+    & > p {
+        margin-top: 5px;
+    }
+}

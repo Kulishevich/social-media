@@ -19,7 +19,6 @@ const Auth = () => {
     
     if(user){
         router.push('/messages')
-        console.log(1)
     }
 
     const signIn = (data: any) => { // вход

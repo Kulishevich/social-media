@@ -14,19 +14,19 @@ import { useIsAuth } from '@/services/useIsAuth'
 const ChatBar = () => {
     const userEmail = useSelector((state: RootState) => state.user.email)
     const [chats, setChats] = useState<IChat[]>([])
-    const [activeChat, setActiveChat] = useState<number | null>(null)
+    const [activeChatId, setActiveChat] = useState<string | null>(null)
     const { user } = useIsAuth()
 
     useEffect(() => {//получение списка чатов
       if(!user) return
       console.log(user.email)
         const chatsCollection = collection(db, "chats");
+
         //запрос который фильтрует входные данные со стороны сервера:
-        //настроить правильно запрос на сервер!!!
         const q = query(chatsCollection, where("users", "array-contains", user.email)); 
         const unsubscribe = onSnapshot(q, (snapshot) => {
           const chatsData: IChat[] = [];
-          snapshot.forEach((doc) => {
+          snapshot.forEach((doc) => { 
             chatsData.push({
               id: doc.id,  // Используем id документа Firestore
               messages: doc.data().messages,
@@ -42,25 +42,30 @@ const ChatBar = () => {
       }, [user]);
 
 
-    const handleActiveChat = () => {
-      
+    const handleActiveChat = (id: string) => {
+      setActiveChat(id)
+      console.log(id)
     }
-
   return (
     <div className={styles.main}>
         <div className={styles.chats}>
+
             <div className={styles.profile}>
                 <small>{userEmail}</small>
             </div>
             <div className={styles.chatsElems}>
                 {/* чаты */}
                 {chats && chats.map((obj, index) => (
-                  <ChatBarElem chat={obj} key={index}/>
+                  <ChatBarElem 
+                    chat={obj} 
+                    key={index} 
+                    handleActiveChat={handleActiveChat}
+                  />
                 ))}
             </div>
         </div>
         
-        <Chat/>
+        <Chat chats={chats} activeChatId={activeChatId}/>
         
         <div className={styles.tools}>
 

@@ -6,12 +6,15 @@ import { FaUserFriends, FaPhoneAlt } from "react-icons/fa";
 import { AiOutlineMessage } from "react-icons/ai";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdWbSunny, MdDarkMode } from "react-icons/md";
+import { PiSignOut } from "react-icons/pi";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { toggleTheme } from '@/redux/slices/themeSlice';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useIsAuth } from '@/services/useIsAuth';
+import { getAuth, signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation'
 
 const pathElems = [
   {
@@ -37,13 +40,27 @@ const Sidebar = () => {
     const dispatch = useDispatch()
     const path = usePathname()
     const { user } = useIsAuth()
+    const router = useRouter()
+
+    //выход из аккаунта
+    const signOutUser = () => {
+      const auth = getAuth()
+      signOut(auth)
+      .then(() => {
+        console.log(1)
+        router.push('/')
+      })
+      .catch((error) => {
+        console.log(2)
+      })
+    }
 
   return (
     <div className={styles.container}>
         <div className={styles.iconContainer}>
           <CgProfile className={styles.icons}/>
-          {user && <small>{user?.email}</small>}
-          <button>Log out</button>
+          {user && <><small>{user?.email}</small>
+          <PiSignOut className={styles.icons} onClick={signOutUser}/></>}  
         </div>
         <nav className={styles.nav}>
             {pathElems.map((elem, index) => (
