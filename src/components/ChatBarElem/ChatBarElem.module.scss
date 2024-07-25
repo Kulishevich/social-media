@@ -2,18 +2,40 @@
     border-bottom: 1px solid #857E81;
     padding: 10px 20px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    // align-items: center;
+    height: 65px;
+    overflow: hidden;
     &:hover {
         cursor: pointer;
         opacity: 0.5;
     }
 }
+.activeChat {
+    background-color: #183045;
+}
+.container {
+    padding-left: 10px;
+    width: 260px;
+}
 .chatTitle {
     color: white;
     margin-bottom: 5px;
+    font-weight: 300;
+    font-size: 17px;
+    background-color: #3C5D7C;
+    border-radius: 5px;
+    padding: 0 5px;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .lastMessage{
-
+    color: rgb(212, 207, 207);
+    font-weight: 500;
+    font-size: 13px;
+    height: 2em;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

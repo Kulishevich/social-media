@@ -3,11 +3,13 @@ import React from 'react'
 import styles from './Chat.module.scss'
 import { FaPaperclip, FaMicrophone } from "react-icons/fa";
 import { BiSticker, BiSolidSend } from "react-icons/bi";
+import { CgProfile } from "react-icons/cg";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import '../../firebase'
 import { collection, getDocs, doc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../../firebase';
 import { useIsAuth } from '@/services/useIsAuth';
+import Image from 'next/image';
 
 type Input = {
   text: string
@@ -19,7 +21,14 @@ const Chat = ({chats, activeChatId}) => {
   const activeChat = chats.find(obj => obj.id === activeChatId) 
 
   const onSubmit: SubmitHandler<Input> = async(data) => { //ИНПУТ, отправка сообщений
-    
+    if(!data.text) {
+      alert('Введите сообщение!')
+      return 
+    }
+    if(!activeChatId) {
+      alert('Выберете чат')
+      return 
+    }
     try{
       const chatRef = doc(db, "chats", activeChatId)
 
@@ -49,20 +58,36 @@ const Chat = ({chats, activeChatId}) => {
   return (
     <div className={styles.main}>
       <div className={styles.chatName}>
-        <h2>{activeChat && activeChat.users.find(elem => elem !== user.email)}</h2>
+        {activeChat && 
+          <div className={styles.chatNameContainer}>
+            <Image src='/profile.png' width={50} height={50} alt='image'/>
+            <div>
+              <h2>{activeChat.users.find(elem => elem !== user.email)}</h2>
+              <small>{activeChat.messages.length} messages</small>
+            </div>
+          </div>
+        }
       </div>
-      <div className={styles.messages}>
+      <div className={styles.messages}> 
         {activeChat && activeChat.messages.map(elem => (
           <div className={styles.container} style={{justifyContent: `${elem.sender === user?.email ? 'right' : 'left'}`}}>
-            <div className={styles.message}>
-              <small>{elem.sender}</small>
-              {/* <small>{elem.createdAt}</small> */}
-              <p>{elem.text}</p>    
+            {/* костыль: ниже две строки почти одинаковы, в которых мы проверяем отправителя, можно сделать было через css но мне лень */}
+            {elem.sender !== user?.email && <Image src='/profile.png' width={30} height={30} alt='image'/>}
+            <div 
+              className={styles.message} 
+              style={{
+                backgroundColor: `${elem.sender === user?.email ? '#6D3AFD' : '#1A2332'}`, 
+                color: `${elem.sender === user?.email ? 'white' : ''}` }}
+            >
+              <small>от : {elem.sender}</small><br/>
+              <p>{elem.text}</p>
+              <small>{elem.createdAt && new Date(elem.createdAt.seconds * 1000).toLocaleString()}</small>
             </div>
+            {elem.sender === user?.email && <Image src='/profile.png' width={30} height={30} alt='image'/>}
           </div>
         ))}
       </div>
-      <div className={styles.textarea}>
+      {activeChat && <div className={styles.textarea}>
         <FaPaperclip className={styles.icon}/>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input 
@@ -76,9 +101,18 @@ const Chat = ({chats, activeChatId}) => {
         </form>
         <BiSticker className={styles.icon}/>
         <FaMicrophone className={styles.icon}/>
-      </div>
+      </div>}
     </div>
   )
 }
 
 export default Chat
+
+// список друзей [ ]
+// добавить аватарки [+-]
+// поиск по чатам через debounce [ ]
+// верстка + анимации + стили - сделать красоту [ ]
+// рефакторинг [ ]
+// типизация [ ] 
+//колесо чата! [ ]
+//разнести ко компонентам! [ ]

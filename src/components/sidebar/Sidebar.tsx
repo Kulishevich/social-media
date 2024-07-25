@@ -59,8 +59,7 @@ const Sidebar = () => {
     <div className={styles.container}>
         <div className={styles.iconContainer}>
           <CgProfile className={styles.icons}/>
-          {user && <><small>{user?.email}</small>
-          <PiSignOut className={styles.icons} onClick={signOutUser}/></>}  
+          {user && <PiSignOut className={styles.icons} onClick={signOutUser}/>}  
         </div>
         <nav className={styles.nav}>
             {pathElems.map((elem, index) => (

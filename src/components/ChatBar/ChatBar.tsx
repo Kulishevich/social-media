@@ -1,18 +1,15 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './ChatBar.module.scss'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
 import Chat from '../Chat/Chat'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { IChat } from '@/types/types'
 import ChatBarElem from '../ChatBarElem/ChatBarElem'
-import { getAuth } from 'firebase/auth'
 import { useIsAuth } from '@/services/useIsAuth'
+import Image from 'next/image'
 
 const ChatBar = () => {
-    const userEmail = useSelector((state: RootState) => state.user.email)
     const [chats, setChats] = useState<IChat[]>([])
     const [activeChatId, setActiveChat] = useState<string | null>(null)
     const { user } = useIsAuth()
@@ -44,22 +41,27 @@ const ChatBar = () => {
 
     const handleActiveChat = (id: string) => {
       setActiveChat(id)
-      console.log(id)
     }
   return (
     <div className={styles.main}>
         <div className={styles.chats}>
-
             <div className={styles.profile}>
-                <small>{userEmail}</small>
+              <Image src='/profile.png' width={50} height={50} alt='image'/>
+              <h5>
+                {user?.email}
+              </h5>
             </div>
             <div className={styles.chatsElems}>
+              <div className={styles.filter}>
+                <input/>
+              </div>
                 {/* чаты */}
                 {chats && chats.map((obj, index) => (
                   <ChatBarElem 
                     chat={obj} 
                     key={index} 
                     handleActiveChat={handleActiveChat}
+                    activeChatId={activeChatId}
                   />
                 ))}
             </div>
