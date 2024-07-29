@@ -11,6 +11,7 @@ import Image from 'next/image'
 import ChatFilter from '../ChatFilter/ChatFilter'
 import { SlEnvolopeLetter } from "react-icons/sl";
 import Loader from '../Loader/Loader'
+import ChatNewMessage from '../ChatNewMessage/ChatNewMessage'
 
 const ChatBar = () => {
     const [chats, setChats] = useState<IChat[]>([])
@@ -18,6 +19,7 @@ const ChatBar = () => {
     const { user } = useIsAuth()
     const [searchChat, setSearchChat] = useState('')
     const [loading, setLoading] = useState<boolean>(true)
+    const [toggleActiveChat, setToggleActiveChat] = useState<boolean>(false)
     console.log(user)
 
     useEffect(() => {//получение списка чатов
@@ -47,8 +49,14 @@ const ChatBar = () => {
       }, [user]);
 
 
-    const handleActiveChat = (id: string) => {//выбор активного чата
+    const handleActiveChat = (id: string) => {//выбор активного чата + выход из создания нового чата если оно есть
+      setToggleActiveChat(true)
       setActiveChat(id)
+    }
+
+    const createNewMessage = () => { //переход на создание нового чата
+      setActiveChat('')
+      setToggleActiveChat(false)
     }
 
   return (
@@ -65,7 +73,7 @@ const ChatBar = () => {
               setSearchChat={setSearchChat}
             />
             {/* Вынести в отдельный компонент создание нового сообщения */}
-            <div className={styles.createChat}>
+            <div className={styles.createChat} onClick={createNewMessage}>
               <SlEnvolopeLetter className={styles.createIcon}/>
               <h3>Новое сообщение: </h3>
             </div>
@@ -84,7 +92,7 @@ const ChatBar = () => {
             </div>
         </div>
         
-        <Chat chats={chats} activeChatId={activeChatId}/>
+        {toggleActiveChat ? <Chat chats={chats} activeChatId={activeChatId}/> : <ChatNewMessage chats={chats}/>}
         
         <div className={styles.tools}>
 

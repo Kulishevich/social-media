@@ -18,6 +18,7 @@ type Input = {
 const Chat = ({chats, activeChatId}) => {
   const { register, handleSubmit, reset } = useForm<Input>()
   const { user, loading } = useIsAuth()
+  if(!user) return
   const activeChat = chats.find(obj => obj.id === activeChatId) 
   const participant = activeChat && activeChat.users.find(elem => elem !== user.email)
 
