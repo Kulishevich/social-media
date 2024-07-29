@@ -1,0 +1,27 @@
+.main {
+    width: 850px;
+    height: 100vh;
+    border: 1px solid #857E81;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    // align-items: center;
+    padding: 20px;
+}
+.user{
+    border: 1px solid #857E81;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 300px;
+    flex-direction: column;
+    padding: 20px 10px;
+    width: 250px;
+    p {
+        background-color: #3C5D7C;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+    }
+}

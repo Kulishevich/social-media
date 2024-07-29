@@ -1,0 +1,22 @@
+.filter {
+    width: 100%;
+    border-bottom: 1px solid #857E81;
+    position: relative;
+    & > input {
+        width: 100%;
+        padding: 15px 15px 15px 35px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        color: white;
+    }
+}
+.glassIcon {
+    position: absolute;
+    font-size: 20px;
+    top: 14px;
+    left: 10px;
+    &:hover {
+        color: white;
+        cursor: pointer;
+    }
+}

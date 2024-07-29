@@ -1,8 +1,12 @@
+import Auth from '@/components/auth/Auth'
+import Loader from '@/components/Loader/Loader'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      calls
+    </div>
   )
 }
 

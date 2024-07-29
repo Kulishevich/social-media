@@ -8,14 +8,21 @@ import { IChat } from '@/types/types'
 import ChatBarElem from '../ChatBarElem/ChatBarElem'
 import { useIsAuth } from '@/services/useIsAuth'
 import Image from 'next/image'
+import ChatFilter from '../ChatFilter/ChatFilter'
+import { SlEnvolopeLetter } from "react-icons/sl";
+import Loader from '../Loader/Loader'
 
 const ChatBar = () => {
     const [chats, setChats] = useState<IChat[]>([])
-    const [activeChatId, setActiveChat] = useState<string | null>(null)
+    const [activeChatId, setActiveChat] = useState<string>('') //убрал тут nul
     const { user } = useIsAuth()
+    const [searchChat, setSearchChat] = useState('')
+    const [loading, setLoading] = useState<boolean>(true)
+    console.log(user)
 
     useEffect(() => {//получение списка чатов
       if(!user) return
+      setLoading(true)
       console.log(user.email)
         const chatsCollection = collection(db, "chats");
 
@@ -33,15 +40,17 @@ const ChatBar = () => {
           console.log(chatsData)
           setChats(chatsData);
         });
-    
+        
+      setLoading(false)
         // Отписка от слушателя при размонтировании компонента
         return () => unsubscribe();
       }, [user]);
 
 
-    const handleActiveChat = (id: string) => {
+    const handleActiveChat = (id: string) => {//выбор активного чата
       setActiveChat(id)
     }
+
   return (
     <div className={styles.main}>
         <div className={styles.chats}>
@@ -51,17 +60,25 @@ const ChatBar = () => {
                 {user?.email}
               </h5>
             </div>
+            <ChatFilter
+              searchChat={searchChat}
+              setSearchChat={setSearchChat}
+            />
+            {/* Вынести в отдельный компонент создание нового сообщения */}
+            <div className={styles.createChat}>
+              <SlEnvolopeLetter className={styles.createIcon}/>
+              <h3>Новое сообщение: </h3>
+            </div>
             <div className={styles.chatsElems}>
-              <div className={styles.filter}>
-                <input/>
-              </div>
-                {/* чаты */}
-                {chats && chats.map((obj, index) => (
-                  <ChatBarElem 
-                    chat={obj} 
-                    key={index} 
-                    handleActiveChat={handleActiveChat}
-                    activeChatId={activeChatId}
+                {loading && <Loader/>}
+                {/* чаты, фильтрация происходит по EMAIL пользователя, проверка идёт на то что-бы в поле ввода совпадало с EMAIL другого пользователя */}
+                {chats && chats.filter(obj => obj.users.some(elem => elem !== user?.email && elem.includes(searchChat)))
+                  .map((obj, index) => (
+                    <ChatBarElem
+                      chat={obj}
+                      key={index}
+                      handleActiveChat={handleActiveChat}
+                      activeChatId={activeChatId}
                   />
                 ))}
             </div>

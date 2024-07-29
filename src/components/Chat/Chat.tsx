@@ -5,7 +5,7 @@ import { FaPaperclip, FaMicrophone } from "react-icons/fa";
 import { BiSticker, BiSolidSend } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { SubmitHandler, useForm } from 'react-hook-form';
-import '../../firebase'
+// import '../../firebase'
 import { collection, getDocs, doc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../../firebase';
 import { useIsAuth } from '@/services/useIsAuth';
@@ -16,9 +16,10 @@ type Input = {
 }
 
 const Chat = ({chats, activeChatId}) => {
-  const { register, handleSubmit } = useForm<Input>()
+  const { register, handleSubmit, reset } = useForm<Input>()
   const { user, loading } = useIsAuth()
   const activeChat = chats.find(obj => obj.id === activeChatId) 
+  const participant = activeChat && activeChat.users.find(elem => elem !== user.email)
 
   const onSubmit: SubmitHandler<Input> = async(data) => { //ИНПУТ, отправка сообщений
     if(!data.text) {
@@ -31,10 +32,11 @@ const Chat = ({chats, activeChatId}) => {
     }
     try{
       const chatRef = doc(db, "chats", activeChatId)
-
+      const { text } = data
+      reset() //очистка поля инпута
       await updateDoc(chatRef, {
         messages: arrayUnion({
-          text: data.text,
+          text: text,
           sender: user?.email,
           createdAt: new Date() // добавляем дату создания сообщения
         })
@@ -45,7 +47,7 @@ const Chat = ({chats, activeChatId}) => {
     catch(e){
       console.error("Error adding message: ", e);
     }
-      
+
     //получения данных о чатах
     const querySnapshot = await getDocs(collection(db, "chats")); 
     querySnapshot.forEach((doc) => {
@@ -54,7 +56,7 @@ const Chat = ({chats, activeChatId}) => {
   }
 
 
-
+  
   return (
     <div className={styles.main}>
       <div className={styles.chatName}>
@@ -62,7 +64,7 @@ const Chat = ({chats, activeChatId}) => {
           <div className={styles.chatNameContainer}>
             <Image src='/profile.png' width={50} height={50} alt='image'/>
             <div>
-              <h2>{activeChat.users.find(elem => elem !== user.email)}</h2>
+              <h2>{participant}</h2>
               <small>{activeChat.messages.length} messages</small>
             </div>
           </div>
@@ -110,9 +112,10 @@ export default Chat
 
 // список друзей [ ]
 // добавить аватарки [+-]
-// поиск по чатам через debounce [ ]
+// debounce в поиске [ ]
 // верстка + анимации + стили - сделать красоту [ ]
 // рефакторинг [ ]
 // типизация [ ] 
 //колесо чата! [ ]
 //разнести ко компонентам! [ ]
+//сохранение юзеров в БД надо сделать

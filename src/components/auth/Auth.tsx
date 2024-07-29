@@ -3,17 +3,19 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Auth.module.scss'
 import { setUser } from '@/redux/slices/userSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import '../../firebase'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/navigation'
 import { useIsAuth } from '@/services/useIsAuth'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from '../../firebase'
+import Loader from '../Loader/Loader'
 
 const Auth = () => {
     const router = useRouter()
     const dispatch = useDispatch()
-    const userElem = useSelector((state: RootState) => state.user)
     const { register, handleSubmit, formState: { errors } } = useForm()
     const { user, loading } = useIsAuth()
     
@@ -34,6 +36,7 @@ const Auth = () => {
                 email: user.email,
             }))
             router.push('/messages')
+            console.log(11)
         })
         .catch(() => alert('Неверный логин или пароль!'))
     }
@@ -45,6 +48,23 @@ const Auth = () => {
         .then(({user}) => {
             console.log(user)
             alert('Регистрация прошла успешно')
+            //тут нужно записывать user'а в коллекцию
+            
+            const addNewUser = async() => {
+                try {
+                    const docRef = await addDoc(collection(db, "users"), {
+                        email: user.email,
+                        uid: user.uid
+                    });
+              
+                    console.log("User added successfully:", docRef);
+                  }
+                  catch(e){
+                    console.error("Error adding new user: ", e);
+                  }
+            }
+
+            addNewUser()
         })
         .catch(error => {
             console.log(error)
@@ -54,12 +74,11 @@ const Auth = () => {
 
   return (
         <div className={styles.container}>
-            <form className={styles.form}>
-                <h1 className={styles.title}>Login</h1>
-            <small>{userElem.email}</small><br/>
+             {loading ? <Loader/> : <form className={styles.form}>
+                <h1 className={styles.title}>Log in</h1>
                 <input placeholder='Email' type="email" {...register("email")}/>
                 <input placeholder='Password' type="password" {...register("password")}/>
-                <div>
+                <div className={styles.buttons}>
                     <button 
                         type='submit' 
                         className={styles.btn1}
@@ -75,7 +94,7 @@ const Auth = () => {
                         Зарегистрироваться
                     </button>
                 </div>
-            </form>
+            </form>}
         </div>
   )
 }

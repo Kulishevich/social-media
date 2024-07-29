@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import RootLayoutClient from "@/components/Provider/RootLayoutClient";
 import Layout from "@/components/Layout/Layout";
+// import '../firebase'
 
 const inter = Inter({ subsets: ["latin"] });
 
