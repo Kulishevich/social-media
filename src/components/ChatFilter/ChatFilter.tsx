@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { FC } from 'react'
 import styles from './ChatFilter.module.scss'
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import debounce from "lodash.debounce"
+// import debounce from "lodash.debounce"
 
-const ChatFilter = ({searchChat, setSearchChat}) => {
+interface IChatFilter {
+  searchChat: string,
+  setSearchChat: (value : string) => void
+}
+
+const ChatFilter: FC<IChatFilter> = ({searchChat, setSearchChat}) => {
     // const handleSearchValue = (e) => {
     //     const inputValue = e.target.value
     //     debounce(() => {

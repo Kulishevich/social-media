@@ -1,27 +1,32 @@
 'use client'
-import React from 'react'
+import React, { FC } from 'react'
 import styles from './Chat.module.scss'
 import { FaPaperclip, FaMicrophone } from "react-icons/fa";
 import { BiSticker, BiSolidSend } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
 import { SubmitHandler, useForm } from 'react-hook-form';
 // import '../../firebase'
 import { collection, getDocs, doc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../../firebase';
 import { useIsAuth } from '@/services/useIsAuth';
 import Image from 'next/image';
+import { IChat } from '@/types/types';
 
 type Input = {
   text: string
 }
 
-const Chat = ({chats, activeChatId}) => {
+interface InterfaceChat {
+  chats: IChat[],
+  activeChatId: string,
+}
+
+const Chat: FC<InterfaceChat> = ({chats, activeChatId}) => {
   const { register, handleSubmit, reset } = useForm<Input>()
   const { user, loading } = useIsAuth()
   if(!user) return
   const activeChat = chats.find(obj => obj.id === activeChatId) 
   const participant = activeChat && activeChat.users.find(elem => elem !== user.email)
-
+  console.log(chats)
   const onSubmit: SubmitHandler<Input> = async(data) => { //ИНПУТ, отправка сообщений
     if(!data.text) {
       alert('Введите сообщение!')
@@ -84,7 +89,7 @@ const Chat = ({chats, activeChatId}) => {
             >
               <small>от : {elem.sender}</small><br/>
               <p>{elem.text}</p>
-              <small>{elem.createdAt && new Date(elem.createdAt.seconds * 1000).toLocaleString()}</small>
+              <small>{elem.createdAt && new Date(Number(elem.createdAt.seconds) * 1000).toLocaleString()}</small>
             </div>
             {elem.sender === user?.email && <Image src='/profile.png' width={30} height={30} alt='image'/>}
           </div>

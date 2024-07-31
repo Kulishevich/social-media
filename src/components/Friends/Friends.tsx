@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './Friends.module.scss'
-import { arrayUnion, collection, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, deleteField, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useIsAuth } from '@/services/useIsAuth'
 import { User } from '@/types/types';
@@ -47,7 +47,7 @@ const Friends = () => {
       return () => unsubscribe();
     }, [user]);
 
-  const addFriend = async(email: string) => {
+  const addFriend = async(email: string) => { //добавление в друзья
     console.log(email)
     // return
     try{
@@ -63,8 +63,15 @@ const Friends = () => {
     }
   }
 
-  const removeFriend = (elem) => {
-    console.log(elem)
+  const removeFriend = async(email: string) => {//удаление из друзей
+    console.log(email)
+
+    const friendsRef = doc(db, 'users', mainUserId);
+
+    // Remove the 'capital' field from the document
+    await updateDoc(friendsRef, {
+      friends: arrayRemove(email)
+    });
   }
 
   return (
@@ -73,7 +80,7 @@ const Friends = () => {
         <h3>Список друзей</h3>
         {loading && <Loader/>}
         <div className={styles.friends}>
-          {friendsArr && usersList.filter(obj => friendsArr.includes(obj.email)).map(elem => (
+          {usersList.filter(obj => friendsArr.includes(obj.email)).map(elem => (
           <div key={elem.uid} className={styles.friend}>
             <Image src='/profile.png' width={50} height={50} alt='image'/>
             <div>
@@ -90,7 +97,7 @@ const Friends = () => {
           <div key={elem.uid} className={styles.user}>
             <Image src='/profile.png' width={140} height={140} alt='image'/>
             <p>{elem.email}</p>
-            <button onClick={() => addFriend(elem)}>Добавить в друзья</button>
+            <button onClick={() => addFriend(elem.email)}>Добавить в друзья</button>
           </div>
           ))}
       </div>

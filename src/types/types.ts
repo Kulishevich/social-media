@@ -2,7 +2,10 @@ export type Message = {
     id: string,
     text: string,
     sender: string,
-    createdAt: string
+    createdAt: {
+        seconds: string,
+        nanoseconds: string,
+    }
 }
 
 export type User = {

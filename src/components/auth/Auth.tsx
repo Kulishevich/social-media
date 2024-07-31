@@ -2,11 +2,8 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Auth.module.scss'
-import { setUser } from '@/redux/slices/userSlice'
-import { useDispatch } from 'react-redux'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import '../../firebase'
-import { RootState } from '@/redux/store'
 import { useRouter } from 'next/navigation'
 import { useIsAuth } from '@/services/useIsAuth'
 import { addDoc, collection } from 'firebase/firestore'
@@ -15,7 +12,6 @@ import Loader from '../Loader/Loader'
 
 const Auth = () => {
     const router = useRouter()
-    const dispatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm()
     const { user, loading } = useIsAuth()
     
@@ -29,11 +25,11 @@ const Auth = () => {
         signInWithEmailAndPassword(auth, data.email, data.password)
         .then(({user}) => {
             alert('Вход выполнен успешно!')
-            dispatch(setUser({
-                id: user.uid,
-                token: user.accessToken,
-                email: user.email,
-            }))
+            // dispatch(setUser({
+            //     id: user.uid,
+            //     token: user.accessToken,
+            //     email: user.email,
+            // }))
             router.push('/messages')
             console.log(11)
         })

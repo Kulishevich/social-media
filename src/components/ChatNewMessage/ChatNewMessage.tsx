@@ -1,18 +1,22 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styles from './ChatNewMessage.module.scss'
 import { useIsAuth } from '@/services/useIsAuth'
-import { User } from '@/types/types'
+import { IChat, User } from '@/types/types'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Loader from '../Loader/Loader'
 import Image from 'next/image'
 
-const ChatNewMessage = ({chats}) => {
+interface IChatNewMessage {
+  chats: IChat[]
+}
+
+const ChatNewMessage:FC<IChatNewMessage> = ({chats}) => {
     const { user } = useIsAuth()
     const [usersList, setUsersList] = useState<User[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    
+    console.log(chats)
   useEffect(() => {//получение списка чатов
     if(!user) return
     setLoading(true)
@@ -27,7 +31,8 @@ const ChatNewMessage = ({chats}) => {
           if(user?.email !== doc.data().email){
             usersData.push({
                 uid: doc.data().uid,
-                email: doc.data().email
+                email: doc.data().email,
+                friends: []
               });
           }
         });
