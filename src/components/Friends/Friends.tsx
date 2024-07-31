@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './Friends.module.scss'
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { arrayUnion, collection, doc, onSnapshot, query, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useIsAuth } from '@/services/useIsAuth'
 import { User } from '@/types/types';
@@ -12,11 +12,12 @@ const Friends = () => {
   const { user } = useIsAuth()
   const [usersList, setUsersList] = useState<User[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [friendsArr, setFriendsArr] = useState<string[]>([])
+  const [mainUserId, setMainUserId] = useState<string>('')
 
   useEffect(() => {//получение списка чатов
     if(!user) return
     setLoading(true)
-    console.log(user.email)
       const usersCollection = collection(db, "users");
 
       //запрос который фильтрует входные данные со стороны сервера:
@@ -24,10 +25,17 @@ const Friends = () => {
       const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
         const usersData: User[] = [];
         snapshot.forEach((doc) => { 
-          usersData.push({
-            uid: doc.data().uid,
-            email: doc.data().email
-          });
+          if(user?.email !== doc.data().email){
+            usersData.push({
+                uid: doc.id,
+                email: doc.data().email,
+                friends: doc.data().friends
+              });
+          }
+          if(user?.email === doc.data().email){
+            setFriendsArr(doc.data().friends)
+            setMainUserId(doc.id)
+          }
         });
         console.log(usersData)
         setUsersList(usersData)
@@ -39,16 +47,53 @@ const Friends = () => {
       return () => unsubscribe();
     }, [user]);
 
+  const addFriend = async(email: string) => {
+    console.log(email)
+    // return
+    try{
+      const chatRef = doc(db, "users", mainUserId)
+      await updateDoc(chatRef, {
+        friends: arrayUnion(email)
+      })
+
+      console.log("Friend added successfully");
+    }
+    catch(e){
+      console.error("Error adding friend: ", e);
+    }
+  }
+
+  const removeFriend = (elem) => {
+    console.log(elem)
+  }
+
   return (
     <div className={styles.main}>
-      {loading && <Loader/>}
-      {usersList.map((elem) => (
-        <div key={elem.uid} className={styles.user}>
-          <Image src='/profile.png' width={140} height={140} alt='image'/>
-          <p>{elem.email}</p>
-          <small>{elem.uid}</small>
+      <div className={styles.friendsContainer}>
+        <h3>Список друзей</h3>
+        {loading && <Loader/>}
+        <div className={styles.friends}>
+          {friendsArr && usersList.filter(obj => friendsArr.includes(obj.email)).map(elem => (
+          <div key={elem.uid} className={styles.friend}>
+            <Image src='/profile.png' width={50} height={50} alt='image'/>
+            <div>
+              <p>{elem.email}</p>
+              <button onClick={() => removeFriend(elem.email)}>Удалить из друзей</button>
+            </div>
+          </div>
+          ))}
         </div>
-        ))}
+      </div>
+      <div className={styles.usersContainer}>
+        {loading && <Loader/>}
+        {usersList.filter(obj => !friendsArr.includes(obj.email)).map((elem) => (
+          <div key={elem.uid} className={styles.user}>
+            <Image src='/profile.png' width={140} height={140} alt='image'/>
+            <p>{elem.email}</p>
+            <button onClick={() => addFriend(elem)}>Добавить в друзья</button>
+          </div>
+          ))}
+      </div>
     </div>
   )
 }

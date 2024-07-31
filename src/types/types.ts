@@ -7,7 +7,8 @@ export type Message = {
 
 export type User = {
     email: string,
-    uid: string
+    uid: string,
+    friends: string[]
 }
 
 export interface IChat{

@@ -1,16 +1,108 @@
 .main {
-    width: 850px;
+    width: 100%;
     height: 100vh;
-    border: 1px solid #857E81;
-    margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    // align-items: center;
-    padding: 20px;
 }
+.friendsContainer{
+  width: 350px;
+  height: 100%;
+  border-right: 1px solid #857E81;
+  display: flex;
+  flex-direction: column;
+  & > h3 {
+    text-align: center;
+    padding: 10px;
+    color: white;
+    border-bottom: 1px solid #857E81;
+  }
+}
+.friends {
+  overflow-y: auto;
+  height: 100%;
+  &::-webkit-scrollbar {
+    width: 10px; /* Ширина вертикального скроллбара */
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  
+  &::-webkit-scrollbar-track {
+    // background-color: white;
+    background-color: transparent;
+  }
+}
+.friend{
+  display: flex;
+  border-bottom: 1px solid #857E81;
+  padding: 10px 20px;
+  display: flex;
+  height: 75px;
+  overflow: hidden;
+  // &:hover {
+  //     cursor: pointer;
+  //     opacity: 0.7;
+  //     box-shadow: 0px 0px 5px white;
+  // }
+  & > div {
+    padding-left: 10px;
+    p {
+      color: white;
+      margin-bottom: 5px;
+      font-weight: 300;
+      font-size: 17px;
+      background-color: #3C5D7C;
+      border-radius: 5px;
+      padding: 2px 5px;
+      overflow: hidden;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+  }
+  & > button {
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #6D3AFD;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 5px;
+    border: none;
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+    }
+}
+  }
+}
+.usersContainer{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  overflow-y: scroll;
+}
+/* Стили для WebKit (Chrome, Safari) */
+.usersContainer::-webkit-scrollbar {
+    width: 10px; /* Ширина вертикального скроллбара */
+  }
+  
+  .usersContainer::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  
+  .usersContainer::-webkit-scrollbar-track {
+    background-color: transparent;
+    // border-radius: 10px;
+  }
 .user{
-    border: 1px solid #857E81;
+    border-radius: 5px;
+    background-color: #152337;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -18,10 +110,24 @@
     flex-direction: column;
     padding: 20px 10px;
     width: 250px;
+    margin: 10px;
     p {
         background-color: #3C5D7C;
         color: white;
         padding: 5px;
         border-radius: 5px;
     }
+    & > button {
+      font-size: 17px;
+      font-weight: bold;
+      background-color: #6D3AFD;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: none;
+      &:hover {
+          opacity: 0.6;
+          cursor: pointer;
+      }
+  }
 }

@@ -31,7 +31,6 @@ const Auth = () => {
             alert('Вход выполнен успешно!')
             dispatch(setUser({
                 id: user.uid,
-                //@ts-ignore
                 token: user.accessToken,
                 email: user.email,
             }))
