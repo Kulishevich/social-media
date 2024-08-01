@@ -54,7 +54,7 @@ const Sidebar = () => {
         console.log(2)
       })
     }
-
+    if(!user?.email) return 
   return (
     <div className={styles.container}>
         <div className={styles.iconContainer}>

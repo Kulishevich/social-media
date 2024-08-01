@@ -20,7 +20,7 @@ const ChatBar = () => {
     const [searchChat, setSearchChat] = useState('')
     const [loading, setLoading] = useState<boolean>(true)
     const [toggleActiveChat, setToggleActiveChat] = useState<boolean>(false)
-    console.log(user)
+    console.log(user?.email)
 
     useEffect(() => {//получение списка чатов
       if(!user) return
@@ -58,7 +58,7 @@ const ChatBar = () => {
       setActiveChat('')
       setToggleActiveChat(false)
     }
-
+  
   return (
     <div className={styles.main}>
         <div className={styles.chats}>
